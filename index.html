@@ -5,33 +5,49 @@
 </head>
 <body>
   <h1>Fetched URLs:</h1>
-  <ul id="directory-urls"></ul>
-  <ul id="relative-urls"></ul>
+  <ul id="urls-list"></ul>
+  
+  <form id="url-form">
+    <input type="text" id="url-input" placeholder="Enter URL" required>
+    <button type="submit">Fetch URLs</button>
+  </form>
 
   <script>
-    // Make an API request to the Cloudflare Worker endpoint and retrieve the URLs
-    fetch('https://hello-world-rough-river-c66d.elonfoster900.workers.dev/')
-      .then(response => response.json())
-      .then(data => {
-        const { directoryUrls, relativeUrls } = data;
+    const form = document.getElementById('url-form');
+    const input = document.getElementById('url-input');
+    const urlsList = document.getElementById('urls-list');
 
-        // Update the DOM to display the directory URLs
-        const directoryUrlsList = document.getElementById('directory-urls');
-        directoryUrls.forEach(url => {
-          const listItem = document.createElement('li');
-          listItem.textContent = url;
-          directoryUrlsList.appendChild(listItem);
-        });
+    form.addEventListener('submit', event => {
+      event.preventDefault();
 
-        // Update the DOM to display the relative URLs
-        const relativeUrlsList = document.getElementById('relative-urls');
-        relativeUrls.forEach(url => {
-          const listItem = document.createElement('li');
-          listItem.textContent = url;
-          relativeUrlsList.appendChild(listItem);
-        });
-      })
-      .catch(error => console.error('Error:', error));
+      const url = input.value;
+
+      if (!url) {
+        alert('Please enter a URL');
+        return;
+      }
+
+      // Make an API request to the Cloudflare Worker endpoint with the user-provided URL
+      fetch('https://hello-world-rough-river-c66d.elonfoster900.workers.dev/?url=' + encodeURIComponent(url))
+        .then(response => response.json())
+        .then(data => {
+          const urls = data;
+
+          // Clear the previous list
+          urlsList.innerHTML = '';
+
+          // Update the DOM to display the fetched URLs
+          urls.forEach(url => {
+            const listItem = document.createElement('li');
+            listItem.textContent = url;
+            urlsList.appendChild(listItem);
+          });
+        })
+        .catch(error => console.error('Error:', error));
+
+      // Clear the input field
+      input.value = '';
+    });
   </script>
 </body>
 </html>
