@@ -1,11 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Cloudflare Pages</title>
 </head>
 <body>
-  <input type="text" id="textbox">
+  <h1>Fetched URL: <span id="fetched-url"></span></h1>
+
+  <script>
+    // Retrieve the fetched URL from the response header and display it
+    const fetchedUrl = new URLSearchParams(window.location.search).get('fetchedUrl');
+    document.getElementById('fetched-url').textContent = fetchedUrl;
+  </script>
 </body>
 </html>
