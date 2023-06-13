@@ -1,26 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>URL Extractor</title>
+  <title>Cloudflare Pages</title>
 </head>
 <body>
-  <input type="text" id="websiteUrlInput" placeholder="Enter website URL">
-  <button onclick="fetchUrls()">Extract URLs</button>
-  <pre id="resultContainer"></pre>
+  <h1>Fetched URLs:</h1>
+  <ul id="urls-list"></ul>
+  
+  <form id="url-form">
+    <input type="text" id="url-input" placeholder="Enter URL" required>
+    <button type="submit">Fetch URLs</button>
+  </form>
 
   <script>
-    function fetchUrls() {
-      const websiteUrl = document.getElementById("websiteUrlInput").value;
-      fetch(`https://hello-world-rough-river-c66d.elonfoster900.workers.dev/?url=${encodeURIComponent(websiteUrl)}`)
+    const form = document.getElementById('url-form');
+    const input = document.getElementById('url-input');
+    const urlsList = document.getElementById('urls-list');
+
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+
+      const url = input.value;
+
+      if (!url) {
+        alert('Please enter a URL');
+        return;
+      }
+
+      // Make an API request to the Cloudflare Worker endpoint with the user-provided URL
+      fetch('https://hello-world-rough-river-c66d.elonfoster900.workers.dev/?url=' + encodeURIComponent(url))
         .then(response => response.json())
-        .then(urls => {
-          const resultContainer = document.getElementById("resultContainer");
-          resultContainer.textContent = JSON.stringify(urls, null, 2);
+        .then(data => {
+          const urls = data;
+
+          // Clear the previous list
+          urlsList.innerHTML = '';
+
+          // Update the DOM to display the fetched URLs
+          urls.forEach(url => {
+            const listItem = document.createElement('li');
+            listItem.textContent = url;
+            urlsList.appendChild(listItem);
+          });
         })
-        .catch(error => {
-          console.error(error);
-        });
-    }
+        .catch(error => console.error('Error:', error));
+
+      // Clear the input field
+      input.value = '';
+    });
   </script>
 </body>
 </html>
