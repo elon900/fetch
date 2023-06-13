@@ -1,56 +1,36 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Directory URL Fetcher</title>
-  </head>
-  <body>
-    <h1>Directory URL Fetcher</h1>
-    <label for="urlInput">Website URL:</label>
-    <input type="text" id="urlInput" />
-    <button id="fetchButton">Fetch URLs</button>
-    <div id="resultContainer"></div>
+<head>
+  <title>Fetch Website URLs</title>
+</head>
+<body>
+  <form id="urlForm">
+    <input type="text" id="urlInput" placeholder="Enter website URL" required>
+    <button type="submit">Fetch URLs</button>
+  </form>
 
-    <script>
-      function fetchDirectoryUrls() {
-        const urlInput = document.getElementById("urlInput");
-        const websiteUrl = urlInput.value.trim();
+  <ul id="urlList"></ul>
 
-        if (!websiteUrl) {
-          return;
-        }
+  <script>
+    const urlForm = document.getElementById("urlForm");
+    const urlInput = document.getElementById("urlInput");
+    const urlList = document.getElementById("urlList");
 
-        const apiUrl = `https://hello-world-rough-river-c66d.elonfoster900.workers.dev/?url=${encodeURIComponent(websiteUrl)}`;
+    urlForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const websiteUrl = urlInput.value;
+      if (!websiteUrl) return;
 
-        fetch(apiUrl)
-          .then(response => response.json())
-          .then(data => {
-            const resultContainer = document.getElementById("resultContainer");
-            resultContainer.innerHTML = "";
+      const response = await fetch(`https://hello-world-rough-river-c66d.elonfoster900.workers.dev/?url=${encodeURIComponent(websiteUrl)}`);
+      const data = await response.json();
 
-            if (data.length === 0) {
-              resultContainer.textContent = "No directory URLs found.";
-            } else {
-              const list = document.createElement("ul");
-              data.forEach(url => {
-                const listItem = document.createElement("li");
-                const link = document.createElement("a");
-                link.href = url;
-                link.textContent = url;
-                listItem.appendChild(link);
-                list.appendChild(listItem);
-              });
-              resultContainer.appendChild(list);
-            }
-          })
-          .catch(error => {
-            console.error("Error fetching directory URLs:", error);
-            const resultContainer = document.getElementById("resultContainer");
-            resultContainer.textContent = "Error fetching directory URLs.";
-          });
-      }
-
-      const fetchButton = document.getElementById("fetchButton");
-      fetchButton.addEventListener("click", fetchDirectoryUrls);
-    </script>
-  </body>
+      urlList.innerHTML = "";
+      data.forEach((url) => {
+        const listItem = document.createElement("li");
+        listItem.textContent = url;
+        urlList.appendChild(listItem);
+      });
+    });
+  </script>
+</body>
 </html>
