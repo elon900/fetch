@@ -21,7 +21,7 @@
       const websiteUrl = urlInput.value;
       if (!websiteUrl) return;
 
-      const response = await fetch(`https://hello-world-rough-river-c66d.elonfoster900.workers.dev/?url=${encodeURIComponent(websiteUrl)}`);
+      const response = await fetch(`https://hello-world-rough-river-c66d.elonfoster900.workers.dev?url=${encodeURIComponent(websiteUrl)}`);
       const data = await response.json();
 
       urlList.innerHTML = "";
