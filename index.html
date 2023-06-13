@@ -4,12 +4,25 @@
   <title>Cloudflare Pages</title>
 </head>
 <body>
-  <h1>Fetched URL: <span id="fetched-url"></span></h1>
+  <h1>Fetched URLs:</h1>
+  <ul id="directory-urls"></ul>
 
   <script>
-    // Retrieve the fetched URL from the response header and display it
-    const fetchedUrl = new URLSearchParams(window.location.search).get('fetchedUrl');
-    document.getElementById('fetched-url').textContent = fetchedUrl;
+    // Make an API request to the Cloudflare Worker endpoint and retrieve the directory URLs
+    fetch('https://hello-world-rough-river-c66d.elonfoster900.workers.dev/')
+      .then(response => response.json())
+      .then(data => {
+        const directoryUrls = data;
+
+        // Update the DOM to display the directory URLs
+        const directoryUrlsList = document.getElementById('directory-urls');
+        directoryUrls.forEach(url => {
+          const listItem = document.createElement('li');
+          listItem.textContent = url;
+          directoryUrlsList.appendChild(listItem);
+        });
+      })
+      .catch(error => console.error('Error:', error));
   </script>
 </body>
 </html>
