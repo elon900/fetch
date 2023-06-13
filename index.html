@@ -4,15 +4,16 @@
   <title>Cloudflare Pages</title>
 </head>
 <body>
-  <h1>Fetched address:</h1>
+  <h1>Fetched URLs:</h1>
   <ul id="directory-urls"></ul>
+  <ul id="relative-urls"></ul>
 
   <script>
-    // Make an API request to the Cloudflare Worker endpoint and retrieve the directory URLs
-    fetch('https://hello-world-rough-river-c66d.elonfoster900.workers.dev/')
+    // Make an API request to the Cloudflare Worker endpoint and retrieve the URLs
+    fetch('<worker-url>')
       .then(response => response.json())
       .then(data => {
-        const directoryUrls = data;
+        const { directoryUrls, relativeUrls } = data;
 
         // Update the DOM to display the directory URLs
         const directoryUrlsList = document.getElementById('directory-urls');
@@ -20,6 +21,14 @@
           const listItem = document.createElement('li');
           listItem.textContent = url;
           directoryUrlsList.appendChild(listItem);
+        });
+
+        // Update the DOM to display the relative URLs
+        const relativeUrlsList = document.getElementById('relative-urls');
+        relativeUrls.forEach(url => {
+          const listItem = document.createElement('li');
+          listItem.textContent = url;
+          relativeUrlsList.appendChild(listItem);
         });
       })
       .catch(error => console.error('Error:', error));
