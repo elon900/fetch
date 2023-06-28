@@ -1,22 +1,14 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>ASCII Art Converter</title>
-</head>
-<body>
-  <h1>ASCII Art Converter</h1>
-  <input type="text" id="inputText">
-  <button onclick="convertToAscii()">Convert</button>
-  <pre id="asciiArt"></pre>
+  <head>
+    <title>ASCII Text Generator</title>
+  </head>
+  <body>
+    <h1>ASCII Text Generator</h1>
+    <textarea id="inputText" rows="5" cols="50" placeholder="Enter your text..."></textarea>
+    <button onclick="generateASCII()">Generate ASCII</button>
+    <div id="output"></div>
 
-  <script>
-    async function convertToAscii() {
-      const inputText = document.getElementById('inputText').value;
-      const response = await fetch(`/convert?text=${encodeURIComponent(inputText)}`);
-      const asciiArt = await response.text();
-      document.getElementById('asciiArt').textContent = asciiArt;
-    }
-  </script>
-  <script src="figlet.js"></script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>
