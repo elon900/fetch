@@ -1,53 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Cloudflare Pages</title>
+  <title>ASCII Art Converter</title>
 </head>
 <body>
-  <h1>Fetched URLs:</h1>
-  <ul id="urls-list"></ul>
-  
-  <form id="url-form">
-    <input type="text" id="url-input" placeholder="Enter URL" required>
-    <button type="submit">Fetch URLs</button>
-  </form>
+  <h1>ASCII Art Converter</h1>
+  <input type="text" id="inputText">
+  <button onclick="convertToAscii()">Convert</button>
+  <pre id="asciiArt"></pre>
 
   <script>
-    const form = document.getElementById('url-form');
-    const input = document.getElementById('url-input');
-    const urlsList = document.getElementById('urls-list');
-
-    form.addEventListener('submit', event => {
-      event.preventDefault();
-
-      const url = input.value;
-
-      if (!url) {
-        alert('Please enter a URL');
-        return;
-      }
-
-      // Make an API request to the Cloudflare Worker endpoint with the user-provided URL
-      fetch('https://hello-world-rough-river-c66d.elonfoster900.workers.dev/?url=' + encodeURIComponent(url))
-        .then(response => response.json())
-        .then(data => {
-          const urls = data;
-
-          // Clear the previous list
-          urlsList.innerHTML = '';
-
-          // Update the DOM to display the fetched URLs
-          urls.forEach(url => {
-            const listItem = document.createElement('li');
-            listItem.textContent = url;
-            urlsList.appendChild(listItem);
-          });
-        })
-        .catch(error => console.error('Error:', error));
-
-      // Clear the input field
-      input.value = '';
-    });
+    async function convertToAscii() {
+      const inputText = document.getElementById('inputText').value;
+      const response = await fetch(`/convert?text=${encodeURIComponent(inputText)}`);
+      const asciiArt = await response.text();
+      document.getElementById('asciiArt').textContent = asciiArt;
+    }
   </script>
+  <script src="figlet.js"></script>
 </body>
 </html>
